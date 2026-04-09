@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор мовлення</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        select, button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+
+        .audio-block {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        audio {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Генератор мовлення</h1>
+
+        <form method="POST">
+            <label for="text"><strong>Введіть текст:</strong></label><br><br>
+            <textarea name="text" id="text" placeholder="Напишіть тут текст...">{{ text if text else "" }}</textarea>
+
+            <div class="controls">
+                <label for="language"><strong>Мова:</strong></label>
+                <select name="language" id="language">
+                    <option value="uk" {% if language == "uk" %}selected{% endif %}>Українська</option>
+                    <option value="en" {% if language == "en" %}selected{% endif %}>Англійська</option>
+                    <option value="de" {% if language == "de" %}selected{% endif %}>Німецька</option>
+                    <option value="fr" {% if language == "fr" %}selected{% endif %}>Французька</option>
+                </select>
+
+                <button type="submit">Озвучити текст</button>
+            </div>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if audio_ready %}
+            <div class="audio-block">
+                <h3>Згенероване мовлення:</h3>
+                <audio controls>
+                    <source src="{{ url_for('static', filename='output.mp3') }}" type="audio/mpeg">
+                    Ваш браузер не підтримує аудіо.
+                </audio>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
